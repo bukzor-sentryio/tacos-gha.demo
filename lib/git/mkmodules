@@ -1,0 +1,16 @@
+#!/bin/sh
+# make a whole bunch of modules
+set -ex
+
+git ls-files |
+  grep '\.tf$' |
+  xargs dirname |
+  sort -u |
+  grep -v module |
+  xargs -n1 ls-parents |
+  grep "$PWD" |
+  sort -u |
+  sed -r 's@^(.*)/(.*)$@\1/\2/module/\2/\2.tf@' |
+  xargs -n1 ./lib/git/new-module \
+;
+
